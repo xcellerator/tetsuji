@@ -511,10 +511,12 @@ class MobileAdapterGB:
             logger.log.info(f'0x17: Check Telephone Line')
             if self.line_busy:
                 logger.log.info(f'0x17: Line Busy')
-                self.packet_data['data'] = bytearray(b'\x05')
+                # Setting the third byte to 0xf0 indicates that we're using the unlimited battle adapter
+                self.packet_data['data'] = bytearray(b'\x05\x4d\xf0')
             else:
                 logger.log.info(f'0x17: Line Free')
-                self.packet_data['data'] = bytearray(b'\x00')
+                # Setting the third byte to 0xf0 indicates that we're using the unlimited battle adapter
+                self.packet_data['data'] = bytearray(b'\x00\x4d\xf0')
 
         # 0x19: READ CONFIGURATION DATA
         elif self.packet_data['id'] == 0x19:
