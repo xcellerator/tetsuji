@@ -99,27 +99,24 @@ class battle:
 
     # Handle the Battle Packets as they arrive
     def handle(self):
+        logger.log.warning(f'Battle: Packet Received ({self.pkt["cmd"]} bytes)')
         # Initial "limit_crystal" packet, reply with same
         if self.pkt['cmd'] == 0x15:
-            logger.log.warning(f'Battle: Initial Packet Received')
             hexdump( self.pkt['data'] )
             return
 
         # Random Bytes Each Time
         elif self.pkt['cmd'] == 0x0d:
-            logger.log.warning(f'Battle: 0x0d Packet Received')
             hexdump( self.pkt['data'] )
             return
 
         # Konnichiwa String (seems unused)
         elif self.pkt['cmd'] == 0x4d:
-            logger.log.warning(f'Battle: 0x4d Packet Received')
             hexdump( self.pkt['data'] )
             return
 
         # Blobs of save data. One from 0x600 (seems unused) and party save data from 0x281a
         elif self.pkt['cmd'] == 0x53:
-            logger.log.warning(f'Battle: 0x53 Packet Received')
             # First few bytes of the Pokemon Party blob is the Player Name, overwrite with string parsing bug
             #self.pkt['data'][0:0+8] = bytes.fromhex('3F4F 1508 1880 0058')
             self.pkt['data'][0:0+3] = bytes.fromhex('3F0000')
@@ -128,13 +125,11 @@ class battle:
 
         # Always nulls
         elif self.pkt['cmd'] == 0x0f:
-            logger.log.warning(f'Battle: 0x0f Packet Received')
             hexdump( self.pkt['data'] )
             return
 
         # Final packet of the Pokemon Party Data
         elif self.pkt['cmd'] == 0x3b:
-            logger.log.warning(f'Battle: 0x3b Packet Received')
             # Packet from index 13 onwards survives the final 0x09-type packet, so that's where the payload goes
             self.pkt['data'][13:13+len(self.print_me)] = self.print_me
             hexdump( self.pkt['data'] )
@@ -142,13 +137,11 @@ class battle:
 
         # First three bytes indicate which Pokemon from the Party are being battled with
         elif self.pkt['cmd'] == 0x09:
-            logger.log.warning(f'Battle: 0x09 Packet Received')
             hexdump( self.pkt['data'] )
             return
 
         # Tetsuji Packet: Use a move or swap out a Pokemon
         elif self.pkt['cmd'] == 0x0c:
-            logger.log.warning(f'Battle: 0x0c Packet Received')
             hexdump( self.pkt['data'] )
             return
 
